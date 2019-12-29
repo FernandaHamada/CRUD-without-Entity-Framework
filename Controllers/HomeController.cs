@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,7 +19,35 @@ namespace CrudWEF2.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            List<Teacher> teacherList = new List<Teacher>();
+            string conn = Microsoft.Extensions.Configuration.ConfigurationExtensions.GetConnectionString(this.Configuration, "DefaultConnection");
+            using (SqlConnection connection = new SqlConnection(conn))
+            {
+                //SQL Data Reader
+                connection.Open();
+                string sql = "Select * From Teacher";
+                SqlCommand command = new SqlCommand(sql, connection);
+                using (SqlDataReader dataReader = command.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        Teacher teacher = new Teacher();
+                        teacher.Id = Convert.ToInt32(dataReader["Id"]);
+                        teacher.Name = Convert.ToString(dataReader["Name"]);
+                        teacher.Skills = Convert.ToString(dataReader["Skills"]);
+                        teacher.TotalStudents = Convert.ToInt32(dataReader["TotalStudents"]);
+                        teacher.Salary = Convert.ToDecimal(dataReader["Salary"]);
+                        teacher.AddeOn = Convert.ToDateTime(dataReader["AddeOn"]);
+                        teacherList.Add(teacher);
+                    }
+                }
+                if (connection != null && connection.State == ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+            }
+            return View(teacherList);
         }
 
         public IActionResult Create()
