@@ -26,12 +26,14 @@ namespace CrudWEF2.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create_Post(Teacher teacher)
+        public IActionResult Create(Teacher teacher)
         {
             if (ModelState.IsValid)
             {
-                string connectionString = Configuration["ConnectionString:DefaultConnection"];
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                //string connectionString = Configuration["ConnectionString:DefaultConnection"];
+                string conn = Microsoft.Extensions.Configuration.ConfigurationExtensions.GetConnectionString(this.Configuration, "DefaultConnection");
+
+                using (SqlConnection connection = new SqlConnection(conn))
                 {
                     string sql = $"Insert Into Teacher(Name, Skills, TotalStudents, Salary) Values ('{teacher.Name}', '{teacher.Skills}', '{teacher.TotalStudents}', '{teacher.Salary}')";
                     using (SqlCommand command = new SqlCommand(sql, connection))
