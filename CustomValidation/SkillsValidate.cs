@@ -1,15 +1,17 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace CrudWEF2.CustomValidation
 {
-    public class SkillsValidate : Attribute, IModelValidatior
+    public class SkillsValidate : Attribute, IModelValidator
     {
         public string[] Allowed { get; set; }
         public string ErrorMessage { get; set; }
-        public IEnumerable<ModelValidationResult> Validate(ModelValidateContext context)
+    
+        public IEnumerable<ModelValidationResult> Validate(ModelValidationContext context)
         {
             if (Allowed.Contains(context.Model as string))
                 return Enumerable.Empty<ModelValidationResult>();
@@ -17,6 +19,5 @@ namespace CrudWEF2.CustomValidation
                 return new List<ModelValidationResult> {
                 new ModelValidationResult("", ErrorMessage)};
         }
-
     }
 }
