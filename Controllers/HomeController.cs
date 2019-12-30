@@ -79,5 +79,55 @@ namespace CrudWEF2.Controllers
             else
                 return View();
         }
+
+        public IActionResult Update(int id)
+        {
+            string conn = Microsoft.Extensions.Configuration.ConfigurationExtensions.GetConnectionString(this.Configuration, "DefaultConnection");
+            Teacher teacher = new Teacher();
+            using (SqlConnection connection = new SqlConnection(conn)) 
+            {
+                string sql = $"Select * From Teacher Where Id = '{id}'";
+                SqlCommand command = new SqlCommand(sql, connection);
+                connection.Open();
+                using (SqlDataReader dataReader = command.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        teacher.Id = Convert.ToInt32(dataReader["Id"]);
+                        teacher.Name = Convert.ToString(dataReader["Name"]);
+                        teacher.Skills = Convert.ToString(dataReader["Skills"]);
+                        teacher.TotalStudents = Convert.ToInt32(dataReader["TotalStudents"]);
+                        teacher.Salary = Convert.ToDecimal(dataReader["Salary"]);
+                        teacher.AddeOn = Convert.ToDateTime(dataReader["AddeOn"]);
+                    }
+                }
+                if(connection != null && connection.State == ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+            }
+            return View(teacher);
+        }
+        [HttpPost]
+        [ActionName("Update")]
+        public IActionResult Update(Teacher teacher)
+        {
+            string conn = Microsoft.Extensions.Configuration.ConfigurationExtensions.GetConnectionString(this.Configuration, "DefaultConnection");
+            using(SqlConnection connection = new SqlConnection(conn))
+            {
+                string sql = $"Update Teacher SET Name='{teacher.Name}', Skills='{teacher.Skills}', TotalStudents='{teacher.TotalStudents}', Salary='{teacher.Salary}' WHERE Id='{teacher.Id}'";
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+                if (connection != null && connection.State == ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+            }
+            return RedirectToAction("Index");
+        }
     }
 }

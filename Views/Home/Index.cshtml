@@ -37,7 +37,8 @@
                     <td>@p.TotalStudents</td>
                     <td>@string.Format(new System.Globalization.CultureInfo("en-US"), "{0:C2}", p.Salary)</td>
                     <td>@string.Format("{0:dddd, dd MMMM yyyy}", p.AddeOn)</td>
-                    <td><a asp-action="Update" asp-route-id="@p.Id">Update</a></td>
+                    @*<td><a asp-action="Update" asp-route-id="@p.Id">Update</a></td>*@
+                    <td><a asp-action="Update" asp-route-id="@p.Id"><button>Update</button></a></td>
                     <td><form asp-action="Delete" method="post" asp-route-id="@p.Id"><button>Delete</button></form></td>
                 </tr>
             }
