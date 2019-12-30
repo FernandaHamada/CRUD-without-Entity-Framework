@@ -38,8 +38,8 @@
                     <td>@string.Format(new System.Globalization.CultureInfo("en-US"), "{0:C2}", p.Salary)</td>
                     <td>@string.Format("{0:dddd, dd MMMM yyyy}", p.AddeOn)</td>
                     @*<td><a asp-action="Update" asp-route-id="@p.Id">Update</a></td>*@
-                    <td><a asp-action="Update" asp-route-id="@p.Id"><button>Update</button></a></td>
-                    <td><form asp-action="Delete" method="post" asp-route-id="@p.Id"><button>Delete</button></form></td>
+                    <td style="text-align:center"><a asp-action="Update" asp-route-id="@p.Id"><button><i class="fas fa-edit"></i></button></a></td>
+                    <td style="text-align:center"><form asp-action="Delete" method="post" asp-route-id="@p.Id"><button><i class="fas fa-trash-alt"></i></button></form></td>
                 </tr>
             }
         }

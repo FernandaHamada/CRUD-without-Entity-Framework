@@ -84,7 +84,7 @@ namespace CrudWEF2.Controllers
         {
             string conn = Microsoft.Extensions.Configuration.ConfigurationExtensions.GetConnectionString(this.Configuration, "DefaultConnection");
             Teacher teacher = new Teacher();
-            using (SqlConnection connection = new SqlConnection(conn)) 
+            using (SqlConnection connection = new SqlConnection(conn))
             {
                 string sql = $"Select * From Teacher Where Id = '{id}'";
                 SqlCommand command = new SqlCommand(sql, connection);
@@ -101,7 +101,7 @@ namespace CrudWEF2.Controllers
                         teacher.AddeOn = Convert.ToDateTime(dataReader["AddeOn"]);
                     }
                 }
-                if(connection != null && connection.State == ConnectionState.Open)
+                if (connection != null && connection.State == ConnectionState.Open)
                 {
                     connection.Close();
                 }
@@ -114,13 +114,41 @@ namespace CrudWEF2.Controllers
         public IActionResult Update(Teacher teacher)
         {
             string conn = Microsoft.Extensions.Configuration.ConfigurationExtensions.GetConnectionString(this.Configuration, "DefaultConnection");
-            using(SqlConnection connection = new SqlConnection(conn))
+            using (SqlConnection connection = new SqlConnection(conn))
             {
                 string sql = $"Update Teacher SET Name='{teacher.Name}', Skills='{teacher.Skills}', TotalStudents='{teacher.TotalStudents}', Salary='{teacher.Salary}' WHERE Id='{teacher.Id}'";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     connection.Open();
                     command.ExecuteNonQuery();
+                }
+                if (connection != null && connection.State == ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            string conn = Microsoft.Extensions.Configuration.ConfigurationExtensions.GetConnectionString(this.Configuration, "DefaultConnection");
+            using(SqlConnection connection = new SqlConnection(conn))
+            {
+                string sql = $"Delete From Teacher Where Id='{id}'";
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    connection.Open();
+                    try
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    catch(SqlException ex)
+                    {
+                        ViewBag.Result = "Operation got error: " + ex.Message;
+                    }
+
                 }
                 if (connection != null && connection.State == ConnectionState.Open)
                 {
